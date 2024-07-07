@@ -1,24 +1,39 @@
-#define trigPin 6
-#define echoPin 7
+#include <SoftwareSerial.h>
 
-float duration_us, distance_cm, distance, filteredDistance, filterArray[20];
+#define trigPin 5
+#define echoPin 6
+#define carPark1 2
+#define carPark2 3
+#define carPark3 4
+
+SoftwareSerial softSerial (10, 11);  //RX,TX
+
+float filteredDistance;
 
 void setup() {
   Serial.begin(19200);
+  softSerial.begin(9600);
+
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  pinMode(carPark1, INPUT);
+  pinMode(carPark2, INPUT);
+  pinMode(carPark3, INPUT);
 }
 
 void loop() {
-  filteredDistance = filterNoise();
-  Serial.print("Distance: ");
-  Serial.print(filteredDistance);
-  Serial.println("cm");
+  // filteredDistance = filterNoise();
+  // Serial.print("Distance: ");
+  // Serial.print(filteredDistance);
+  // Serial.println("cm");
   
   parkingInfo();
+  //softSerial.println(filteredDistance);
+
 }
 
 float measureDistance() {
+  float duration_us, distance_cm;
   digitalWrite(trigPin, LOW);
   delayMicroseconds(10);
   digitalWrite(trigPin, HIGH);
@@ -32,6 +47,7 @@ float measureDistance() {
 }
 
 float filterNoise() {
+  float distance, filterArray[20];
   //1. Take 20 measurements and store in an array
   for (int sample = 0; sample < 20; sample++) {
     filterArray[sample] = measureDistance();
@@ -61,29 +77,75 @@ float filterNoise() {
 }
 
 void parkingInfo() {
-  int parkingSpaces = 5;
-  int carCounter = 0;
-  bool carParked = false;
+  int parkingSpaces = 4;
+  int emptySpaces = 0;
+  int carCounter = 0, slot1 = 0, slot2 = 0, slot3 = 0, slot4 = 0;
+  String carParked = "", availableSpaces = "";
   int distance;
 
+  int carStatus1 = digitalRead(carPark1);
+  int carStatus2 = digitalRead(carPark2);
+  int carStatus3 = digitalRead(carPark3);
   distance = filterNoise();
 
+  if (carStatus1 == 0) {
+    slot1 = 1;
+    softSerial.println("Slot 1 is occupied");
+    Serial.println("Slot 1 is occupied");
+  }
+  else {
+    slot1 = 0;
+    softSerial.println("Slot 1 is empty!");
+    Serial.println("Slot 1 is empty!");
+  }
+  if (carStatus2 == 0) {
+    slot2 = 1;
+    softSerial.println("Slot 2 is occupied");
+    Serial.println("Slot 2 is occupied");
+  }
+  if (carStatus2 == 1) {
+    slot2 = 0;
+    softSerial.println("Slot 2 is empty!");
+    Serial.println("Slot 2 is empty!");
+  }
+  if (carStatus3 == 0) {
+    slot3 = 1;
+    softSerial.println("Slot 3 is occupied");
+    Serial.println("Slot 3 is occupied");
+  }
+  else {
+    slot3 = 0;
+    softSerial.println("Slot 3 is empty!");
+    Serial.println("Slot 3 is empty!");
+  }
+
   if (distance > 6) {
-    carParked = false;
-    carCounter -= 1;
+    slot4 = 0;
+    softSerial.println("Slot 4 is empty!");
+    Serial.println("Slot 4 is empty!");
   }
 
-  if (distance < 4) {
-    carParked = true;
-    carCounter += 1;
+  if (distance < 5) {
+    slot4 = 1;
+    softSerial.println("Slot 4 is occupied!");
+    Serial.println("Slot 4 is occupied!");
   }
 
-  if (carCounter <= 0) { carCounter = 0; }
+  carCounter = slot1 + slot2 + slot3 + slot4;
 
-  parkingSpaces = parkingSpaces - carCounter;
-
-  Serial.println(parkingSpaces);
-  Serial.println(carCounter);
-  Serial.println(carParked);
+  emptySpaces = parkingSpaces - carCounter;
+  
+  availableSpaces = String(emptySpaces) + String("\n");
+  carParked = String(carCounter) + String("\n");
+  softSerial.print("Empty Spaces: ");
+  Serial.print("Empty Spaces: ");
+  softSerial.print(availableSpaces);
+  Serial.print(availableSpaces);
+  softSerial.print("Cars parked: ");
+  Serial.print("Cars parked: ");
+  softSerial.print(carParked);
+  Serial.print(carParked);
+  delay(100);
+  
 
 }
