@@ -42,16 +42,31 @@ void loop() {
   while (Serial2.available()) {
     dataIn = Serial2.read();
 
-    if (dataIn != '\n') { message += dataIn; }
+    if (dataIn != '\n' && dataIn != '\r') { message += dataIn; }
     else                { break; }
 
   }
 
   if (dataIn == '\n') {
-    Serial.println(message);
+    //Serial.println(message);
+    message.trim();
     // String input;
+    String jsonStr = message;
 
-    JsonDocument doc;
+    int emptySpaces = jsonStr.substring(jsonStr.indexOf("\"empty Spaces\":") + 14, jsonStr.indexOf(",", jsonStr.indexOf("\"empty Spaces\":"))).toInt();
+    int carsParked = jsonStr.substring(jsonStr.indexOf("\"cars parked\":") + 13, jsonStr.indexOf(",", jsonStr.indexOf("\"cars parked\":"))).toInt();
+    String slot1 = jsonStr.substring(jsonStr.indexOf("\"slot 1\":\"") + 9, jsonStr.indexOf("\"", jsonStr.indexOf("\"slot 1\":\"") + 9));
+    String slot2 = jsonStr.substring(jsonStr.indexOf("\"slot 2\":\"") + 9, jsonStr.indexOf("\"", jsonStr.indexOf("\"slot 2\":\"") + 9));
+    String slot3 = jsonStr.substring(jsonStr.indexOf("\"slot 3\":\"") + 9, jsonStr.indexOf("\"", jsonStr.indexOf("\"slot 3\":\"") + 9));
+    String slot4 = jsonStr.substring(jsonStr.indexOf("\"slot 4\":\"") + 9, jsonStr.indexOf("\"", jsonStr.indexOf("\"slot 4\":\"") + 9));
+
+    Serial.println("Empty Spaces: " + String(emptySpaces));
+    Serial.println("Cars parked: " + String(carsParked));
+    Serial.println("Slot 1: " + slot1);
+    Serial.println("Slot 2: " + slot2);
+    Serial.println("Slot 3: " + slot3);
+    Serial.println("Slot 4: " + slot4);
+    // JsonDocument doc;
 
     // DeserializationError error = deserializeJson(doc, message);
 
@@ -70,7 +85,7 @@ void loop() {
 
     if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0)) {
       sendDataPrevMillis = millis();
-      if(Firebase.RTDB.setJSON(&fbdo, "ParkingInfo/Availabilty", message)) {
+      if(Firebase.RTDB.setString(&fbdo, "ParkingInfo/Availabilty", WIFI_SSID)) {
         Serial.println();
         Serial.print(" - Succesfully saved to: " + fbdo.dataPath());
         Serial.println(" (" + fbdo.dataType() + ")");
@@ -82,7 +97,8 @@ void loop() {
     dataIn = 0;
     message = "";
   }
-  // delay(100);
+  
+  delay(100);
   
 }
 

@@ -104,8 +104,7 @@ void parkingInfo() {
     slot2 = 1;
     slot_2 = "occupied";
     //softSerial.println("Slot 2 is occupied");
-  }
-  if (carStatus2 == 1) {
+  } else {
     slot2 = 0;
     slot_2 = "empty";
     //softSerial.println("Slot 2 is empty!");
@@ -145,7 +144,7 @@ void parkingInfo() {
   doc["slot 3"] = slot_3;
   doc["slot 4"] = slot_4;
 
-  doc.shrinkToFit();  // optional
+  //doc.shrinkToFit();  // optional
 
   serializeJson(doc, output);
 
