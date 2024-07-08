@@ -45,51 +45,157 @@ void loop() {
   while (Serial2.available()) {
     dataIn = Serial2.read();
 
-    if (dataIn != '\n') { message += dataIn; }
-    else                { break; }
-
-  }
-
-  if (dataIn == '\n') {
-    //String jsonStr = message;
-    Serial.println("Received JSON: " + message);
-    message.trim();
-    // String input;
-    
-    // JsonDocument doc;
-
-    // DeserializationError error = deserializeJson(doc, jsonStr);
-
-    // if (error) {
-    //   Serial.print("deserializeJson() failed: ");
-    //   Serial.println(error.c_str());
-    //   return;
-    // }
-
-    // int empty_Spaces = doc["empty Spaces"]; // 89
-    // int cars_parked = doc["cars parked"]; // 29
-    // const char* slot_1 = doc["slot 1"]; // "occupied"
-    // const char* slot_2 = doc["slot 2"]; // "occupied"
-    // const char* slot_3 = doc["slot 3"]; // "occupied"
-    // const char* slot_4 = doc["slot 4"]; // "occupied"
-
-    if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0)) {
-      sendDataPrevMillis = millis();
-      if(Firebase.RTDB.set(&fbdo, "ParkingInfo/", message)) {
-        Serial.println();
-        Serial.print(" - Succesfully saved to: " + fbdo.dataPath());
-        Serial.println(" (" + fbdo.dataType() + ")");
-      }else {
-        Serial.println("FAILED: " + fbdo.errorReason());
-      }
+    // if (dataIn != '\n') { message += dataIn; }
+    // else                { break; }
+    if (dataIn != '\n') {
+      message += dataIn;
+      lastReadTime = millis(); // Update the last read time
+    } else {
+      processMessage();
     }
-    
-    dataIn = 0;
-    message = "";
   }
+
+  // Check for timeout
+  if (millis() - lastReadTime > readTimeout && message.length() > 0) {
+    Serial.println("Read timeout, processing message");
+    processMessage();
+  }
+
+  // if (dataIn == '\n') {
+  //   //String jsonStr = message;
+  //   Serial.println("Received JSON: " + message);
+  //   message.trim();
+  //   // String input;
+    
+  //   // JsonDocument doc;
+
+  //   // DeserializationError error = deserializeJson(doc, jsonStr);
+
+  //   // if (error) {
+  //   //   Serial.print("deserializeJson() failed: ");
+  //   //   Serial.println(error.c_str());
+  //   //   return;
+  //   // }
+
+  //   // int empty_Spaces = doc["empty Spaces"]; // 89
+  //   // int cars_parked = doc["cars parked"]; // 29
+  //   // const char* slot_1 = doc["slot 1"]; // "occupied"
+  //   // const char* slot_2 = doc["slot 2"]; // "occupied"
+  //   // const char* slot_3 = doc["slot 3"]; // "occupied"
+  //   // const char* slot_4 = doc["slot 4"]; // "occupied"
+
+  //   if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0)) {
+  //     sendDataPrevMillis = millis();
+  //     if(Firebase.RTDB.set(&fbdo, "ParkingInfo/", message)) {
+  //       Serial.println();
+  //       Serial.print(" - Succesfully saved to: " + fbdo.dataPath());
+  //       Serial.println(" (" + fbdo.dataType() + ")");
+  //     }else {
+  //       Serial.println("FAILED: " + fbdo.errorReason());
+  //     }
+  //   }
+    
+  //   dataIn = 0;
+  //   message = "";
+  // }
   
   delay(100);
   
+}
+
+void processMessage() {
+  message.trim(); // Remove any extraneous whitespace or newline characters
+  Serial.println("Received JSON: " + message);
+
+  // Check if the received message is a valid JSON string
+  StaticJsonDocument<256> doc;
+  DeserializationError error = deserializeJson(doc, message);
+
+  if (error) {
+    Serial.print("Invalid JSON received: ");
+    Serial.println(error.c_str());
+  } else {
+    int empty_Spaces = doc["empty Spaces"]; // 89
+    int cars_parked = doc["cars parked"]; // 29
+    const char* slot_1 = doc["slot 1"]; // "occupied"
+    const char* slot_2 = doc["slot 2"]; // "occupied"
+    const char* slot_3 = doc["slot 3"]; // "occupied"
+    const char* slot_4 = doc["slot 4"]; // "occupied"
+
+    if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0)) {
+      sendDataPrevMillis = millis();
+      if (Firebase.RTDB.setInt(&fbdo, "ParkingInfo/Availability", empty_Spaces)) {
+        Serial.println();
+        Serial.print(" - Successfully saved to: " + fbdo.dataPath());
+        Serial.println(" (" + fbdo.dataType() + ")");
+      } else {
+        Serial.println("FAILED: " + fbdo.errorReason());
+      }
+
+      if (Firebase.RTDB.setInt(&fbdo, "ParkingInfo/cars_parked", cars_parked)) {
+        Serial.println();
+        Serial.print(" - Successfully saved to: " + fbdo.dataPath());
+        Serial.println(" (" + fbdo.dataType() + ")");
+      } else {
+        Serial.println("FAILED: " + fbdo.errorReason());
+      }
+
+      if (Firebase.RTDB.setString(&fbdo, "ParkingInfo/Slot_1", slot_1)) {
+        Serial.println();
+        Serial.print(" - Successfully saved to: " + fbdo.dataPath());
+        Serial.println(" (" + fbdo.dataType() + ")");
+      } else {
+        Serial.println("FAILED: " + fbdo.errorReason());
+      }
+
+      if (Firebase.RTDB.setString(&fbdo, "ParkingInfo/Slot_2", slot_2)) {
+        Serial.println();
+        Serial.print(" - Successfully saved to: " + fbdo.dataPath());
+        Serial.println(" (" + fbdo.dataType() + ")");
+      } else {
+        Serial.println("FAILED: " + fbdo.errorReason());
+      }
+
+      if (Firebase.RTDB.setString(&fbdo, "ParkingInfo/Slot_3", slot_3)) {
+        Serial.println();
+        Serial.print(" - Successfully saved to: " + fbdo.dataPath());
+        Serial.println(" (" + fbdo.dataType() + ")");
+      } else {
+        Serial.println("FAILED: " + fbdo.errorReason());
+      }
+
+      if (Firebase.RTDB.setString(&fbdo, "ParkingInfo/Slot_4", slot_4)) {
+        Serial.println();
+        Serial.print(" - Successfully saved to: " + fbdo.dataPath());
+        Serial.println(" (" + fbdo.dataType() + ")");
+      } else {
+        Serial.println("FAILED: " + fbdo.errorReason());
+      }
+    }
+  }
+
+  // int empty_Spaces = doc["empty Spaces"]; // 89
+  // int cars_parked = doc["cars parked"]; // 29
+  // const char* slot_1 = doc["slot 1"]; // "occupied"
+  // const char* slot_2 = doc["slot 2"]; // "occupied"
+  // const char* slot_3 = doc["slot 3"]; // "occupied"
+  // const char* slot_4 = doc["slot 4"]; // "occupied"
+
+  // Serial.print("Empty Spaces: ");
+  // Serial.println(empty_Spaces);
+  // Serial.print("Cars Parked: ");
+  // Serial.println(cars_parked);
+  // Serial.print("Slot 1: ");
+  // Serial.println(slot_1);
+  // Serial.print("Slot 2: ");
+  // Serial.println(slot_2);
+  // Serial.print("Slot 3: ");
+  // Serial.println(slot_3);
+  // Serial.print("Slot 4: ");
+  // Serial.println(slot_4);
+
+  // Clear message buffer after processing
+  message = "";
 }
 
 void wifi_connect() {
