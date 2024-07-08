@@ -1,4 +1,5 @@
 //Esp32 Code
+#include <ArduinoJson.h>
 #include <WiFi.h>
 #include <Firebase_ESP_Client.h>
 #include "addons/TokenHelper.h"
@@ -48,9 +49,28 @@ void loop() {
 
   if (dataIn == '\n') {
     Serial.println(message);
+    // String input;
+
+    JsonDocument doc;
+
+    // DeserializationError error = deserializeJson(doc, message);
+
+    // if (error) {
+    //   Serial.print("deserializeJson() failed: ");
+    //   Serial.println(error.c_str());
+    //   return;
+    // }
+
+    // int empty_Spaces = doc["empty Spaces"]; // 89
+    // int cars_parked = doc["cars parked"]; // 29
+    // const char* slot_1 = doc["slot 1"]; // "occupied"
+    // const char* slot_2 = doc["slot 2"]; // "occupied"
+    // const char* slot_3 = doc["slot 3"]; // "occupied"
+    // const char* slot_4 = doc["slot 4"]; // "occupied"
+
     if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0)) {
       sendDataPrevMillis = millis();
-      if(Firebase.RTDB.setString(&fbdo, "ParkingInfo/Availabilty", message)) {
+      if(Firebase.RTDB.setJSON(&fbdo, "ParkingInfo/Availabilty", message)) {
         Serial.println();
         Serial.print(" - Succesfully saved to: " + fbdo.dataPath());
         Serial.println(" (" + fbdo.dataType() + ")");

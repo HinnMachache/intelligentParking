@@ -80,7 +80,7 @@ void parkingInfo() {
   int parkingSpaces = 4;
   int emptySpaces = 0;
   int carCounter = 0, slot1 = 0, slot2 = 0, slot3 = 0, slot4 = 0;
-  String space1 = "empty", space2 = "empty", space3 = "empty", space4 = "empty";
+  String slot_1 = "empty", slot_2 = "empty", slot_3 = "empty", slot_4 = "empty";
   String carParked = "", availableSpaces = "";
   int distance;
   String output;
@@ -92,44 +92,44 @@ void parkingInfo() {
 
   if (carStatus1 == 0) {
     slot1 = 1;
-    space1 = "occupied";
+    slot_1 = "occupied";
     // softSerial.println("Slot 1 is occupied");
   }
   else {
     slot1 = 0;
-    space1 = "empty";
+    slot_1 = "empty";
     //softSerial.println("Slot 1 is empty!");
   }
   if (carStatus2 == 0) {
     slot2 = 1;
-    space2 = "occupied";
+    slot_2 = "occupied";
     //softSerial.println("Slot 2 is occupied");
   }
   if (carStatus2 == 1) {
     slot2 = 0;
-    space2 = "empty";
+    slot_2 = "empty";
     //softSerial.println("Slot 2 is empty!");
   }
   if (carStatus3 == 0) {
     slot3 = 1;
-    space3 = "occupied";
+    slot_3 = "occupied";
     //softSerial.println("Slot 3 is occupied");
   }
   else {
     slot3 = 0;
-    space3 = "empty";
+    slot_3 = "empty";
     //softSerial.println("Slot 3 is empty!");   
   }
 
   if (distance > 6) {
     slot4 = 0;
-    space4 = "empty";
+    slot_4 = "empty";
     //softSerial.println("Slot 4 is empty!");
   }
 
   if (distance < 5) {
     slot4 = 1;
-    space4 = "occupied";
+    slot_4 = "occupied";
     //softSerial.println("Slot 4 is occupied!");
   }
 
@@ -140,10 +140,10 @@ void parkingInfo() {
 
   doc["empty Spaces"] = emptySpaces;
   doc["cars parked"] = carCounter;
-  doc["slot 1"] = space1;
-  doc["slot 2"] = space2;
-  doc["slot 3"] = space3;
-  doc["slot 4"] = space4;
+  doc["slot 1"] = slot_1;
+  doc["slot 2"] = slot_2;
+  doc["slot 3"] = slot_3;
+  doc["slot 4"] = slot_4;
 
   doc.shrinkToFit();  // optional
 
