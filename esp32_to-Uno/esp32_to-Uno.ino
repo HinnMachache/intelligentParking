@@ -23,7 +23,7 @@ bool signupOK = false;
 char dataIn;
 String message;
 unsigned long lastReadTime = 0;
-const unsigned long readTimeout = 3000; // Timeout for reading the message
+const unsigned long readTimeout = 2000; // Timeout for reading the message
 
 
 void setup() {
@@ -36,17 +36,9 @@ void setup() {
 }
 
 void loop() {
-  // Serial2.print("Esp32 Says: Hallo Uno! This is ESP32\n");
-  // delay(200);
-
-  // while (Serial2.available ()) {
-  //   Serial.println(Serial2.readString());
-  // }
   while (Serial2.available()) {
     dataIn = Serial2.read();
 
-    // if (dataIn != '\n') { message += dataIn; }
-    // else                { break; }
     if (dataIn != '\n') {
       message += dataIn;
       lastReadTime = millis(); // Update the last read time
@@ -60,44 +52,6 @@ void loop() {
     Serial.println("Read timeout, processing message");
     processMessage();
   }
-
-  // if (dataIn == '\n') {
-  //   //String jsonStr = message;
-  //   Serial.println("Received JSON: " + message);
-  //   message.trim();
-  //   // String input;
-    
-  //   // JsonDocument doc;
-
-  //   // DeserializationError error = deserializeJson(doc, jsonStr);
-
-  //   // if (error) {
-  //   //   Serial.print("deserializeJson() failed: ");
-  //   //   Serial.println(error.c_str());
-  //   //   return;
-  //   // }
-
-  //   // int empty_Spaces = doc["empty Spaces"]; // 89
-  //   // int cars_parked = doc["cars parked"]; // 29
-  //   // const char* slot_1 = doc["slot 1"]; // "occupied"
-  //   // const char* slot_2 = doc["slot 2"]; // "occupied"
-  //   // const char* slot_3 = doc["slot 3"]; // "occupied"
-  //   // const char* slot_4 = doc["slot 4"]; // "occupied"
-
-  //   if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0)) {
-  //     sendDataPrevMillis = millis();
-  //     if(Firebase.RTDB.set(&fbdo, "ParkingInfo/", message)) {
-  //       Serial.println();
-  //       Serial.print(" - Succesfully saved to: " + fbdo.dataPath());
-  //       Serial.println(" (" + fbdo.dataType() + ")");
-  //     }else {
-  //       Serial.println("FAILED: " + fbdo.errorReason());
-  //     }
-  //   }
-    
-  //   dataIn = 0;
-  //   message = "";
-  // }
   
   delay(100);
   
@@ -173,26 +127,6 @@ void processMessage() {
       }
     }
   }
-
-  // int empty_Spaces = doc["empty Spaces"]; // 89
-  // int cars_parked = doc["cars parked"]; // 29
-  // const char* slot_1 = doc["slot 1"]; // "occupied"
-  // const char* slot_2 = doc["slot 2"]; // "occupied"
-  // const char* slot_3 = doc["slot 3"]; // "occupied"
-  // const char* slot_4 = doc["slot 4"]; // "occupied"
-
-  // Serial.print("Empty Spaces: ");
-  // Serial.println(empty_Spaces);
-  // Serial.print("Cars Parked: ");
-  // Serial.println(cars_parked);
-  // Serial.print("Slot 1: ");
-  // Serial.println(slot_1);
-  // Serial.print("Slot 2: ");
-  // Serial.println(slot_2);
-  // Serial.print("Slot 3: ");
-  // Serial.println(slot_3);
-  // Serial.print("Slot 4: ");
-  // Serial.println(slot_4);
 
   // Clear message buffer after processing
   message = "";
