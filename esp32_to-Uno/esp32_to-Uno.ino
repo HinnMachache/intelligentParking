@@ -50,7 +50,7 @@ void loop() {
     Serial.println(message);
     if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > 5000 || sendDataPrevMillis == 0)) {
       sendDataPrevMillis = millis();
-      if(Firebase.RTDB.setString(&fbdo, "ParkingInfo/Availabilty", WIFI_SSID)) {
+      if(Firebase.RTDB.setString(&fbdo, "ParkingInfo/Availabilty", message)) {
         Serial.println();
         Serial.print(" - Succesfully saved to: " + fbdo.dataPath());
         Serial.println(" (" + fbdo.dataType() + ")");
