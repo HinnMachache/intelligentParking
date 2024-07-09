@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "193763206813",
+    "firebase_url": "https://esp32-project00-default-rtdb.firebaseio.com",
+    "project_id": "esp32-project00",
+    "storage_bucket": "esp32-project00.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193763206813:android:97a76ce6dbc1a8488d1674",
+        "android_client_info": {
+          "package_name": "com.example.intelligentparking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9J6hpdhD8pMra0jdKwJGl7lnlL3CkT9M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
