@@ -2,4 +2,9 @@
 <resources>
 
     <style name="Theme.IntelligentParking" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="splashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/group_43</item>
+        <item name="android:statusBarColor">@color/yellow</item>
+    </style>
 </resources>
