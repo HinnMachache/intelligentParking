@@ -13,10 +13,8 @@
 <p>You need to have the mobile app to be able to experience the system.</p>
 <br>
 <li>
-  <ol><h3>Step 1: Clone this repository.</h3></ol>
-  <p><i>&emsp;&emsp;&emsp;https://github.com/HinnMachache/intelligentParking.git</i></p>
-  <ol><h3>Step 2: In the repository, open the folder `intelligentParking` and launch the app in you phone via Android Studio</h3></ol>
-  <p>&emsp;&emsp;&emsp;Use the app as required.</p>
+  <ol><h3>Step 1: Install the APK app file.</h3></ol>
+  <p><i>&emsp;&emsp;&emsp;An APK file app will be provided, which upon installation, will render the app</i></p>
 </li>
 
 <h1>Usage</h1>
