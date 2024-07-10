@@ -21,5 +21,6 @@
 
 <h1>Usage</h1>
 <p>The intelligentParking mobile app comes in a simple UI</p>
-![53e0060813b937ca4296cb1689a06b5a](https://github.com/HinnMachache/intelligentParking/assets/70755555/25914ed1-bff8-4b39-81d8-55f1d874b806)
+
+![IMG-20240710-WA0019](https://github.com/HinnMachache/intelligentParking/assets/70755555/944a9322-73c5-491a-8384-21375fef2977)
 
