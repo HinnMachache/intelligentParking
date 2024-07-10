@@ -23,4 +23,6 @@
 <p>The intelligentParking mobile app comes in a simple UI</p>
 
 ![IMG-20240710-WA0019](https://github.com/HinnMachache/intelligentParking/assets/70755555/944a9322-73c5-491a-8384-21375fef2977)
+<p>The text view below the button `Capacity` shows the total number of parking spaces<br>The text view below the button `Available` shows the empty parking spaces that are currently available for use<br>The user clicks on the button `Available` and the status of Available spaces is updated in Real time<br>The parking lots are marked uniquely and the text view below each space indicates the status of the parking lot in real time</p>
+
 
